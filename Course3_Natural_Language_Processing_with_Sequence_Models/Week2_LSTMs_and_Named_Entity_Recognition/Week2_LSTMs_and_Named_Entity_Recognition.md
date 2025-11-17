@@ -1,191 +1,57 @@
-# Week 1: Sentiment Analysis with Logistic Regression
+# Week 2: LSTMs and Named Entity Recognition
 
 ## Course Overview
-**Learn to extract features from text into numerical vectors, then build a binary classifier for tweets using a logistic regression!**  
+**Learn about how long short-term memory units (LSTMs) solve the vanishing gradient problem, and how Named Entity Recognition systems quickly extract important information from text. Then build your own Named Entity Recognition system using an LSTM and data from Kaggle!**  
 *Coursera - [DeepLearning.AI](https://www.deeplearning.ai/courses/natural-language-processing-specialization/)*
 
 ---
 
 ## Learning Objectives
-- [x] [Supervised ML & Sentiment Analysis](#1-supervised-ml--sentiment-analysis)
-- [x] [Vocabulary & Feature Extraction](#2-vocabulary--feature-extraction)
-- [x] [Feature Extraction with Frequencies](#3-feature-extraction-with-frequencies)
-- [x] [Calculating word frequencies](#4-preprocessing)
-- [x] [Putting it all together](#5-putting-it-all-together)
-- [x] [Logistic Regression](#6-logistic-regression)
-
-
----
-
-## 1. Supervised ML & Sentiment Analysis
-
-![Supervised ML](images/week1_1_SupervisedML.png)
-![Supervised ML](images/week1_2_SupervisedML.png)
-
+- [x] [RNN and Vanishing Gradients](#1-rnn-and-vanishing-gradients)
+- [x] [Introduction to LSTMs](#2-introduction-to-lstms)
+- [x] [LSTM Architecture](#3-lstm-architecture)
+- [x] [Intro to Named Entity Recognition](#4-intro-to-named-entity-recognition)
+- [x] [Training NERs: Data Processing](#5-training-ners-data-processing)
+- [x] [Computing Accuracy](#6-computing-accuracy)   
 
 ---
 
-## 2. Vocabulary & Feature Extraction
+## 1. RNN and Vanishing Gradients
 
-![Vocabulary & Feature Extraction](images/week1_3_VocabularyAndFeatureExtraction.png)
-
-
----
-
-## 3. Feature Extraction with Frequencies
-
-![Feature Extraction with Frequencies](images/week1_4_FeatureExtractionWithFrequencies.png)
-![Feature Extraction with Frequencies](images/week1_5_FeatureExtractionWithFrequencies.png)
-![Feature Extraction with Frequencies](images/week1_6_FeatureExtractionWithFrequencies.png)
+![RNN and Vanishing Gradients](images/week1_1_RNNAndVanishingGradients.png)
+![RNN and Vanishing Gradients](images/week1_2_RNNAndVanishingGradients.png)
 
 ---
 
-## 4. Preprocessing
-
-![Preprocessing](images/week1_7_Preprocessing.png)
-
----
-
-## 5. Putting it all together
-
-![Putting it all together](images/week1_8_PuttingItAllTogether.png)
-![Putting it all together](images/week1_9_PuttingItAllTogether.png)
-
+## 2. Introduction to LSTMs
+![Introduction to LSTMs](images/week2_1_IntroductionToLSTMs.png)
+![Introduction to LSTMs](images/week2_2_IntroductionToLSTMs.png)
 
 ---
 
-## 6. Logistic Regression
+## 3. LSTM Architecture
+![LSTM Architecture](images/week2_3_LSTMArchitecture.png)
+![LSTM Architecture](images/week2_4_LSTMArchitecture.png)
+![LSTM Architecture](images/week2_5_LSTMArchitecture.png)
+![LSTM Architecture](images/week2_6_LSTMArchitecture.png)
+![LSTM Architecture](images/week2_7_LSTMArchitecture.png)
 
-![Logistic Regression](images/week1_10_LogisticRegression.png)
-![Logistic Regression](images/week1_11_LogisticRegression.png)
-![Logistic Regression](images/week1_12_LogisticRegression.png)
-![Logistic Regression](images/week1_13_LogisticRegression.png)
-![Logistic Regression](images/week1_14_LogisticRegression.png)
-![Logistic Regression](images/week1_15_LogisticRegression.png)
-![Logistic Regression](images/week1_16_LogisticRegression.png)
-![Logistic Regression](images/week1_17_LogisticRegression.png)
+---
 
-### Optinal Logistic Regression: Gradient
-#### Derivation of the Sigmoid Function
+## 4. Intro to Named Entity Recognition
+![Intro to Named Entity Recognition](images/week2_8_IntroToNamedEntityRecognition.png)
 
-First, we calculate the derivative of the sigmoid function:
+---
 
-\[
-h(x) = \frac{1}{1 + e^{-x}}
-\]
-To compute the derivative \( h'(x) \), we apply the **quotient rule**:
+## 5. Training NERs: Data Processing
+![Training NERs: Data Processing](images/week2_9_TrainingNERsDataProcessing.png)
+![Training NERs: Data Processing](images/week2_10_TrainingNERsDataProcessing.png)
+![Training NERs: Data Processing](images/week2_11_TrainingNERsDataProcessing.png)
+![Training NERs: Data Processing](images/week2_12_TrainingNERsDataProcessing.png)
+![Training NERs: Data Processing](images/week2_13_TrainingNERsDataProcessing.png)
 
-The quotient rule says that for a function \( f(x) = \frac{u(x)}{v(x)} \), the derivative is:
+---
 
-\[
-f'(x) = \frac{u'(x)v(x) - u(x)v'(x)}{[v(x)]^2}
-\]
-
-Here, we set:
-
-- \( u(x) = 1 \Rightarrow u'(x) = 0 \)
-- \( v(x) = 1 + e^{-x} \Rightarrow v'(x) = -e^{-x} \)
-
-Now apply the quotient rule:
-
-\[
-h'(x) = \left( \frac{1}{1 + e^{-x}} \right)'
-= \frac{-(1 + e^{-x})'}{(1 + e^{-x})^2}
-= \frac{-\left(0 + (-x)' \cdot e^{-x} \right)}{(1 + e^{-x})^2}
-= \frac{-(-1)e^{-x}}{(1 + e^{-x})^2}
-= \frac{e^{-x}}{(1 + e^{-x})^2}
-\]
-
-Now, recall:
-\[
-h(x) = \frac{1}{1 + e^{-x}}, \quad 1 - h(x) = \frac{e^{-x}}{1 + e^{-x}}
-\]
-
-So we can write:
-\[
-h'(x) = h(x) \cdot (1 - h(x))
-\]
-
-#### Derivation of the Logistic Regression Cost Function Gradient
-We start with the cost function for logistic regression:
-
-\[
-J(\theta) = -\frac{1}{m} \sum_{i=1}^m \left[
-y^{(i)} \log(h(x^{(i)}, \theta)) + (1 - y^{(i)}) \log(1 - h(x^{(i)}, \theta))
-\right]
-\]
-
-We compute the partial derivative with respect to \( \theta_j \):
-
-\[
-    \frac{\partial}{\partial \theta_j} J(\theta) = \frac{\partial}{\partial \theta_j} \left(- \frac{1}{m} \sum_{i=1}^m \left[ y^{(i)} \log(h(x^{(i)}, \theta)) + (1 - y^{(i)}) \log(1 - h(x^{(i)}, \theta)) \right]\right)
-\]
-
-\[
-= -\frac{1}{m} \sum_{i=1}^m \left[
-y^{(i)} \frac{\partial}{\partial \theta_j} \log(h(x^{(i)}, \theta)) + 
-(1 - y^{(i)}) \frac{\partial}{\partial \theta_j} \log(1 - h(x^{(i)}, \theta))
-\right]
-\]
-
-Using the chain rule:
-
-\[
-= -\frac{1}{m} \sum_{i=1}^m \left[
-\frac{y^{(i)}}{h(x^{(i)}, \theta)} \frac{\partial}{\partial \theta_j} h(x^{(i)}, \theta) + \frac{1 - y^{(i)}}{1 - h(x^{(i)}, \theta)} \frac{\partial}{\partial \theta_j} (- h(x^{(i)}, \theta))
-\right]
-\]
-
-\[
-= -\frac{1}{m} \sum_{i=1}^m \left[
-\frac{y^{(i)}}{h(x^{(i)}, \theta)} \frac{\partial}{\partial \theta_j} h(x^{(i)}, \theta) - \frac{1 - y^{(i)}}{1 - h(x^{(i)}, \theta)} \frac{\partial}{\partial \theta_j} h(x^{(i)}, \theta)
-\right]
-\]
-
-Now factor out \( \frac{\partial}{\partial \theta_j} h(x^{(i)}, \theta) \). Since \( h(x^{(i)}, \theta) = \sigma(\theta^T x^{(i)}) \), and we know:
-
-\[
-\frac{\partial}{\partial \theta_j} h(x^{(i)}, \theta) = h(x^{(i)}, \theta)(1 - h(x^{(i)}, \theta)) x_j^{(i)}
-\]
-
-So:
-
-\[
-= -\frac{1}{m} \sum_{i=1}^m \left[
-\left( \frac{y^{(i)}}{h(x^{(i)}, \theta)} - \frac{1 - y^{(i)}}{1 - h(x^{(i)}, \theta)} \right)
-h(x^{(i)}, \theta)(1 - h(x^{(i)}, \theta)) x_j^{(i)}
-\right]
-\]
-
-Now simplify the expression inside the parentheses:
-
-\[
-\left( \frac{y^{(i)}}{h(x^{(i)}, \theta)} - \frac{1 - y^{(i)}}{1 - h(x^{(i)}, \theta)} \right)
-= \frac{y^{(i)} (1 - h(x^{(i)}, \theta)) - (1 - y^{(i)}) h(x^{(i)}, \theta)}{h(x^{(i)}, \theta)(1 - h(x^{(i)}, \theta))}
-\]
-
-Then the numerator becomes:
-
-\[
-y^{(i)} - y^{(i)} h(x^{(i)}, \theta) - h(x^{(i)}, \theta) + y^{(i)} h(x^{(i)}, \theta)
-= y^{(i)} - h(x^{(i)}, \theta)
-\]
-
-So the full expression simplifies to:
-
-\[
-\frac{y^{(i)} - h(x^{(i)}, \theta)}{h(x^{(i)}, \theta)(1 - h(x^{(i)}, \theta))} \cdot h(x^{(i)}, \theta)(1 - h(x^{(i)}, \theta)) = y^{(i)} - h(x^{(i)}, \theta)
-\]
-
-Thus the final gradient is:
-
-\[
-\frac{\partial}{\partial \theta_j} J(\theta) = \frac{1}{m} \sum_{i=1}^m \left( h(x^{(i)}, \theta) - y^{(i)} \right) x_j^{(i)}
-\]
-
-
-
-
-
-
-
+## 6. Computing Accuracy
+![Computing Accuracy](images/week2_14_ComputingAccuracy.png)
+![Computing Accuracy](images/week2_15_ComputingAccuracy.png)
