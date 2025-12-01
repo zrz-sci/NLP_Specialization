@@ -1,4 +1,4 @@
-# Week 1: Sentiment Analysis with Logistic Regression
+# Week 1: Neural Machine Translation
 
 ## Course Overview
 **Learn to extract features from text into numerical vectors, then build a binary classifier for tweets using a logistic regression!**  
